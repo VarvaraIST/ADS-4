@@ -11,48 +11,47 @@ int countPairs1(int* arr, int len, int value) {
             }
         }
     }
-
     return countNum;
 }
 
 int countPairs2(int* arr, int len, int value) {
-    int count = 0;
-    int leftArr = 0;
-    int rightArr = len - 1;
-
-    while (leftArr < rightArr) {
-        int sum = arr[leftArr] + arr[rightArr];
-
-        if (sum == value) {
-            if (arr[leftArr] == arr[rightArr]) {
-                int n = rightArr - leftArr + 1;
-                count += n * (n - 1) / 2;
+    int left = 0;
+    int right = len - 1;
+    int per = 0;
+    while (left < right) {
+        int currSum = arr[left] + arr[right];
+        if (currSum == value) {
+            if (arr[left] == arr[right]) {
+                int llen = right - left + 1;
+                per = per + llen * (llen - 1) / 2;
                 break;
-            } else {
-                int leftCount = 1;
-                while (leftArr + 1 < rightArr && arr[leftArr] == arr[leftArr + 1]) {
-                    leftCount++;
-                    leftArr++;
-                }
-
-                int rightCount = 1;
-                while (rightArr - 1 > leftArr && arr[rightArr] == arr[rightArr - 1]) {
-                    rightCount++;
-                    rightArr--;
-                }
-
-                count += leftCount * rightCount;
-                leftArr++;
-                rightArr--;
             }
-        } else if (sum < value) {
-            leftArr++;
-        } else {
-            rightArr--;
+            int leftVal = arr[left];
+            int rightVal = arr[right];
+            int indx = left;
+            int leftCount = 0;
+            while (indx <= right && arr[indx] == leftVal) {
+                leftCount++;
+                indx++;
+            }
+            indx = right;
+            int rightCount = 0;
+            while (indx >= left && arr[indx] == rightVal) {
+                rightCount++;
+                indx--;
+            }
+            per = per + leftCount * rightCount;
+            left = left + leftCount;
+            right = right - rightCount;
+        }
+        else if (currSum < value) {
+            left++;
+        }
+        else {
+            right--;
         }
     }
-
-    return count;
+    return per;   
 }
 
 int countPairs3(int* arr, int len, int value) {
@@ -61,8 +60,8 @@ int countPairs3(int* arr, int len, int value) {
         if (i > 0 && arr[i] == arr[i - 1]) {
             continue;
         }
-        int need = value - arr[i];
-        if (need < arr[i]) {
+        int ne = value - arr[i];
+        if (ne < arr[i]) {
             break;
         }
         int low = i + 1;
@@ -70,10 +69,10 @@ int countPairs3(int* arr, int len, int value) {
         int first = -1;
         while (low <= high) {
             int mid = low + (high - low) / 2;
-            if (arr[mid] == need) {
+            if (arr[mid] == ne) {
                 first = mid;
                 high = mid - 1;
-            } else if (arr[mid] < need) {
+            } else if (arr[mid] < ne) {
                 low = mid + 1;
             } else {
                 high = mid - 1;
@@ -87,25 +86,25 @@ int countPairs3(int* arr, int len, int value) {
         int last = first;
         while (low <= high) {
             int mid = low + (high - low) / 2;
-            if (arr[mid] == need) {
+            if (arr[mid] == ne) {
                 last = mid;
                 low = mid + 1;
-            } else if (arr[mid] < need) {
+            } else if (arr[mid] < ne) {
                 low = mid + 1;
             } else {
                 high = mid - 1;
             }
         }
-        if (arr[i] == need) {
-            int len = last - i + 1;
-            per = per + len * (len - 1) / 2;
+        if (arr[i] == ne) {
+            int lLen = last - i + 1;
+            per = per + lLen * (lLen - 1) / 2;
             break;
         }
-        int leftCnt = 1;
-        while (i + leftCnt < len && arr[i + leftCnt] == arr[i]) {
-            leftCnt++;
+        int leftCount = 1;
+        while (i + leftCount < len && arr[i + leftCount] == arr[i]) {
+            leftCount++;
         }
-        per = per + leftCnt * (last - first + 1);
+        per = per + leftCount * (last - first + 1);
     }
     return per;
 }
