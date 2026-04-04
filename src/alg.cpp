@@ -43,15 +43,13 @@ int countPairs2(int* arr, int len, int value) {
             per = per + leftCount * rightCount;
             left = left + leftCount;
             right = right - rightCount;
-        }
-        else if (currSum < value) {
+        } else if (currSum < value) {
             left++;
-        }
-        else {
+        } else {
             right--;
         }
     }
-    return per;   
+    return per;
 }
 
 int countPairs3(int* arr, int len, int value) {
